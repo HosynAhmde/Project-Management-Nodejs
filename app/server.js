@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const http = require("http");
 const path = require("path");
+const notFound = require("./middleware/not-found");
 const app = express();
 
 class Application {
@@ -10,6 +11,7 @@ class Application {
     this.configDatabase(DB_URL);
     this.configAplication();
     this.createRoutes();
+    // this.errorHandler();
   }
 
   configAplication() {
@@ -36,7 +38,9 @@ class Application {
       });
     });
   }
-  errorHandler() {}
+  errorHandler() {
+    notFound();
+  }
 }
 
 module.exports = Application;
