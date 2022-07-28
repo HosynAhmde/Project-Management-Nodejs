@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const http = require("http");
 const path = require("path");
 const notFound = require("./middleware/not-found");
+const { AllRoutes } = require("./routers/router");
 const app = express();
 
 class Application {
@@ -32,15 +33,9 @@ class Application {
     });
   }
   createRoutes() {
-    app.get("/", (req, res) => {
-      res.send({
-        message: "hi",
-      });
-    });
+    app.use(AllRoutes);
   }
-  errorHandler() {
-    notFound();
-  }
+  errorHandler() {}
 }
 
 module.exports = Application;
