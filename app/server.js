@@ -12,7 +12,7 @@ class Application {
     this.configDatabase(DB_URL);
     this.configAplication();
     this.createRoutes();
-    // this.errorHandler();
+    this.errorHandler();
   }
 
   configAplication() {
@@ -33,9 +33,25 @@ class Application {
     });
   }
   createRoutes() {
+    app.get("/", (req, res, next) => {
+      return res.send({ message: "hi" });
+    });
     app.use(AllRoutes);
+    // app.use((err, req, res, next) => {
+    //   try {
+
+    //   } catch (error) {
+    //     next(err);
+    //   }
+    // });
   }
-  errorHandler() {}
+  errorHandler() {
+    app.use((req, res, next) => {
+      return res.status(404).send({
+        message: "rout dosnt exsist",
+      });
+    });
+  }
 }
 
 module.exports = Application;
