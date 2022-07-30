@@ -1,25 +1,35 @@
-const { body, check } = require("express-validator");
+const { body } = require("express-validator");
+const { UserModel } = require("../models/users");
 
 function registerValidator() {
   return [
-    body("username").custom((value) => {
-      if (value) {
-        const usernameregex = /^[a-z]+[a-z0-9\_\.]{3,20}/gi;
-        if (usernameregex.test(value)) {
-          return true;
-        }
-        throw "نام کاربری را طبق الگو وارد کنید.";
-      }
-      throw "نام کاربری نمیتواند خالی باشد.";
-    }),
-    body("email").isEmail().not().withMessage("ایمیل صحیح نمیباشد."),
-    // .notEmpty()
-    // .withMessage("ایمیل نمیتواند خالی باشد."),
+    body("username")
+      .notEmpty()
+      .withMessage("نام کاربری نمیتواند خالی باشد.")
+      .matches(/^[a-z]+[a-z0-9\_\.]{3,20}/gi)
+      .withMessage("نام کاربری را طبق الگو وارد کنید.")
+      .custom(async (username) => {
+        const user = await UserModel.findOne({ username });
+        if (user) throw "نام کاربری قبلا استفاده شده است.";
+      }),
+    body("email")
+      .isEmail()
+      .withMessage("ایمیل صحیح نمیباشد.")
+      .notEmpty()
+      .withMessage("ایمیل نمیتواند خالی باشد.")
+      .custom(async (email) => {
+        const user = await UserModel.findOne({ email });
+        if (user) throw "ایمیل قبلا استفاده شده است.";
+      }),
     body("mobile")
       .isMobilePhone("fa-IR")
-      .withMessage("شماره موبایل صحیح نمیباشد."),
-    // .notEmpty()
-    // .withMessage("ایمیل نمیتواند خالی باشد."),
+      .withMessage("شماره موبایل صحیح نمیباشد.")
+      .notEmpty()
+      .withMessage("ایمیل نمیتواند خالی باشد.")
+      .custom(async (mobile) => {
+        const user = await UserModel.findOne({ mobile });
+        if (user) throw "شماره موبایل قبلا استفاده شده است.";
+      }),
     body("password")
       .isLength({ min: 5, max: 16 })
       .withMessage(" رمز عبور باید حداقل 6 کاراکتر و حداکثر 16 کاراکتر باشد."),
