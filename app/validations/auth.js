@@ -32,7 +32,7 @@ function registerValidator() {
       }),
     body("password")
       .isLength({ min: 5, max: 16 })
-      .withMessage(" رمز عبور باید حداقل 6 کاراکتر و حداکثر 16 کاراکتر باشد."),
+      .withMessage(" رمز عبور باید حداقل 5 کاراکتر و حداکثر 16 کاراکتر باشد."),
     body("confirmpassword").custom((value, { req }) => {
       if (!value) throw "رمز عبور نمیتواند خالی باشد.";
       if (value !== req?.body?.confirmpassword)
@@ -41,4 +41,21 @@ function registerValidator() {
     }),
   ];
 }
-module.exports = { registerValidator };
+
+function loginValidator() {
+  return [
+    body("username")
+      .notEmpty()
+      .withMessage("نام کاربری نمیتواند خالی باشد.")
+      .matches(/^[a-z]+[a-z0-9\_\.]{3,20}/gi),
+    // .custom(async (username) => {
+    //   const user = await UserModel.findOne({ username });
+    //   if (!user) throw "نام کاربری و یا رمز عبور اشتباه می باشد.";
+    //   return true;
+    // }),
+    body("password")
+      .isLength({ min: 5, max: 16 })
+      .withMessage(" رمز عبور باید حداقل 5 کاراکتر و حداکثر 16 کاراکتر باشد."),
+  ];
+}
+module.exports = { registerValidator, loginValidator };
