@@ -1,15 +1,20 @@
 class UserController {
-  getProfile(req, res, next) {
+  getProfile(req, res) {
     try {
       const user = req.user;
       return res.json({
         user,
       });
     } catch (error) {
+      console.log(error);
+    }
+  }
+  editeProfile(req, res, next) {
+    try {
+    } catch (error) {
       next(error);
     }
   }
-  updateProfile() {}
   addSkills() {}
   updateProfile() {}
   acceptInvaiteInToTeam() {}

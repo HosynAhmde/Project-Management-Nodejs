@@ -1,6 +1,6 @@
-const Aplication = require("./app/server");
-const db =
-  "mongodb+srv://admin:admin@cluster0.cl1tf.mongodb.net/?retryWrites=true&w=majority";
 require("dotenv").config();
+
+const Aplication = require("./app/server");
+const db = process.env.DB_URL;
 
 new Aplication(3000, db);
