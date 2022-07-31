@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const http = require("http");
 const path = require("path");
-const notFound = require("./middleware/not-found");
 const { AllRoutes } = require("./routers/router");
 const app = express();
 

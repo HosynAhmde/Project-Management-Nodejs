@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 const hashPassword = require("../modules/hashPassword");
 const { UserModel } = require("../models/users");
-const generateToken = require("../modules/generateToken");
+const { generateToken } = require("../modules/JwtToken");
+
 class AuthController {
   async register(req, res, next) {
     try {
