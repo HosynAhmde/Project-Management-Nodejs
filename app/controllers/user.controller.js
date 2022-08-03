@@ -1,14 +1,14 @@
 const { UserModel } = require("../models/users");
 
 class UserController {
-  getProfile(req, res) {
+  getProfile(req, res, next) {
     try {
       const user = req.user;
       return res.json({
         user,
       });
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
   async editeProfile(req, res, next) {
@@ -32,9 +32,16 @@ class UserController {
     try {
       const userID = req.user._id;
       const filepath = req.file?.path?.substring(7);
+      const image_profile =
+        req.protocol +
+        "://" +
+        req.get("host") +
+        "/" +
+        filepath.replace(/[\\\\]/gm, "/");
+
       const result = await UserModel.updateOne(
         { _id: userID },
-        { $set: { image_profile: filepath } }
+        { $set: { image_profile: image_profile } }
       );
       if (result.modifiedCount > 0) {
         return res.send({

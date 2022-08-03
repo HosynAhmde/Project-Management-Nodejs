@@ -18,7 +18,7 @@ function imageProfileValidator() {
     body("image").custom((value, { req }) => {
       if (Object.keys(req.file).length == 0) throw "لطفا یک تصویر انتخاب کنید";
       const type = path.extname(req.file?.originalname);
-      console.log(type);
+
       const types = [".jpg", ".png", ".jpeg", ".webp"];
       if (!types.includes(type))
         throw { message: "فرمت ارسال شده صحیح  نمیباشد." };
