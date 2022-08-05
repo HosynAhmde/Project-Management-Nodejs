@@ -8,12 +8,15 @@ const uploadfile = async (req, res, next) => {
     if (req.file || Object.keys(req.files).length == 0)
       throw { status: 400, message: "لطفا یک تصویر را انتخاب کنید." };
     let image = req.files.image;
+    let type = path.extname(image.name);
+    if (![".png", ".jpg", ".jgep", ".HEIC"].includes(type))
+      throw { status: 400, message: "فرمت عکس صحیح نیست." };
     const image_path = path.join(
       createUploadPath(),
 
-      Date.now() + path.extname(image.name)
+      Date.now() + type
     );
-    req.body.image = image_path;
+    req.body.image = image_path.substring(7);
     let uploadPath = path.join(__dirname, "..", "..", image_path);
     console.log(uploadPath);
     image.mv(uploadPath, (err) => {

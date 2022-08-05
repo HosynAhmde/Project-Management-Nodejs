@@ -1,4 +1,5 @@
 const { ProjectModel } = require("../models/project");
+const createLink = require("../modules/createLinkImage");
 
 class ProjectController {
   async createProject(req, res, next) {
@@ -28,6 +29,9 @@ class ProjectController {
       const owner = req.user._id;
 
       const projects = await ProjectModel.find({ owner });
+      for (const project of projects) {
+        project.image = createLink(project.image, req);
+      }
       return res.send({
         status: 200,
         succes: true,
@@ -41,8 +45,9 @@ class ProjectController {
     try {
       const owner = req.user._id;
       const projectID = req.params.id;
-      console.log(owner, projectID);
+
       const project = await ProjectModel.findOne({ owner, _id: projectID });
+      project.image = createLink(project.image, req);
       if (!project) throw { status: 404, message: "پروژه ای یافت نشد!" };
       return res.send({
         succes: true,
@@ -83,6 +88,26 @@ class ProjectController {
       return res.send({
         succes: true,
         message: "اپدیت با موفقیت انجام شد.",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async updateImageProject(req, res, next) {
+    try {
+      const { image } = req.body;
+      const owner = req.user._id;
+      const projectID = req.params.id;
+      const updateImage = await ProjectModel.updateOne(
+        { owner, _id: projectID },
+        { $set: { image } }
+      );
+      if (updateImage.modifiedCount == 0)
+        throw { status: 400, message: "بروز رسانی انجام نشد." };
+      return res.send({
+        succes: true,
+        message: "بررز رسانی با موفقیت انجام شد.",
+        status: 200,
       });
     } catch (error) {
       next(error);

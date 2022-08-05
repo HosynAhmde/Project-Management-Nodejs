@@ -33,12 +33,22 @@ router.delete(
   expressValidatorErrors,
   ProjectController.removeProject
 );
-router.put(
+router.patch(
   "/update/:id",
   chekLogin,
   idValidation(),
   expressValidatorErrors,
   ProjectController.updateProject
+);
+
+router.patch(
+  "/update-imageproject/:id",
+  fileupload(),
+  chekLogin,
+  uploadfile,
+  idValidation(),
+  expressValidatorErrors,
+  ProjectController.updateImageProject
 );
 
 module.exports = { projectRoutes: router };

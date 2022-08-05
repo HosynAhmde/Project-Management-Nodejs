@@ -1,4 +1,5 @@
 const { UserModel } = require("../models/users");
+const createLink = require("../modules/createLinkImage");
 
 class UserController {
   getProfile(req, res, next) {
@@ -32,12 +33,7 @@ class UserController {
     try {
       const userID = req.user._id;
       const filepath = req.file?.path?.substring(7);
-      const image_profile =
-        req.protocol +
-        "://" +
-        req.get("host") +
-        "/" +
-        filepath.replace(/[\\\\]/gm, "/");
+      const image_profile = createLink(filepath, req);
 
       const result = await UserModel.updateOne(
         { _id: userID },
