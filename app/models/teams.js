@@ -4,7 +4,8 @@ const TeamSchema = new mongoose.Schema(
     name: { type: String, required: true },
     description: { type: String },
     users: { type: [mongoose.Types.ObjectId] },
-    owner: { type: [mongoose.Types.ObjectId], required: true },
+    username: { type: String, required: true, unique: true },
+    owner: { type: mongoose.Types.ObjectId, required: true },
   },
   { timestamps: true }
 );
