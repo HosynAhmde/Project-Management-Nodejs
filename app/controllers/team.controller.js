@@ -1,4 +1,5 @@
 const { TeamModel } = require("../models/teams");
+const { UserModel } = require("../models/users");
 class TeamController {
   async createTeam(req, res, next) {
     try {
@@ -77,7 +78,54 @@ class TeamController {
     }
   }
 
-  inviteUserToTeam() {}
+  async inviteUserToTeam(req, res, next) {
+    try {
+      const userID = req.user._id;
+      const { username, teamID } = req.params;
+      const team = await TeamModel.findOne({
+        $or: [{ owner: userID }, { users: userID }],
+        _id: teamID,
+      });
+      if (!team)
+        throw { status: 400, message: "تیمی جهت دعوت کردن افراد یافت نشد. " };
+      const user = await UserModel.findOne({ username });
+      if (!user)
+        throw {
+          status: 400,
+          message: "کاربر مورد نظر جهت دعوت کردن وجود ندارد.",
+        };
+      const userInvited = await TeamModel.findOne({
+        $or: [{ owner: user._id }, { users: user._id }],
+        _id: teamID,
+      });
+      if (userInvited)
+        throw {
+          status: 400,
+          message: "کاربر مورد نظر قبلا به تیم دعوت شده است. ",
+        };
+      const request = {
+        caller: req.user.username,
+        requestdate: new Date(),
+        teamID,
+        status: "pending",
+      };
+      const updateUserResult = await UserModel.updateOne(
+        { username },
+        {
+          $push: { inviteRequest: request },
+        }
+      );
+      if (updateUserResult == 0)
+        throw { status: 500, message: "درخواست ثبت  نشد" };
+      return res.send({
+        status: 200,
+        succes: true,
+        message: "ثبت درخواست با موفقیت انجام شد.",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   updateTeam() {}
   removeUserFromTeam() {}
 }

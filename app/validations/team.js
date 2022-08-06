@@ -16,4 +16,5 @@ function createTeamValidator() {
     }),
   ];
 }
+
 module.exports = createTeamValidator;

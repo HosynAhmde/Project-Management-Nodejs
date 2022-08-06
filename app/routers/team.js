@@ -15,7 +15,12 @@ router.post(
 
 router.get("/list", chekLogin, TeamController.getTeams);
 router.get("/me", chekLogin, TeamController.getMyTeams);
+router.get(
+  "/invite/:teamID/:username",
+  chekLogin,
 
+  TeamController.inviteUserToTeam
+);
 router.get(
   "/:id",
   chekLogin,
@@ -30,4 +35,5 @@ router.delete(
   expressValidatorErrors,
   TeamController.removeTeam
 );
+
 module.exports = { teamRoutes: router };
