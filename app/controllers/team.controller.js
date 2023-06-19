@@ -82,10 +82,12 @@ class TeamController {
     try {
       const userID = req.user._id;
       const { username, teamID } = req.params;
+      // console.log(username + teamID);
       const team = await TeamModel.findOne({
         $or: [{ owner: userID }, { users: userID }],
         _id: teamID,
       });
+      // console.log(team);
       if (!team)
         throw { status: 400, message: "تیمی جهت دعوت کردن افراد یافت نشد. " };
       const user = await UserModel.findOne({ username });
@@ -94,10 +96,12 @@ class TeamController {
           status: 400,
           message: "کاربر مورد نظر جهت دعوت کردن وجود ندارد.",
         };
+      // console.log(username);
       const userInvited = await TeamModel.findOne({
-        $or: [{ owner: user._id }, { users: user._id }],
+        $or: [{ owner: userID }, { users: userID }],
         _id: teamID,
       });
+      console.log("ffff" + userInvited);
       if (userInvited)
         throw {
           status: 400,
@@ -105,17 +109,19 @@ class TeamController {
         };
       const request = {
         caller: req.user.username,
-        requestdate: new Date(),
+        requestDate: new Date(),
         teamID,
         status: "pending",
       };
+      console.log(request);
       const updateUserResult = await UserModel.updateOne(
         { username },
+
         {
-          $push: { inviteRequest: request },
+          $push: { inviteRequests: request },
         }
       );
-      if (updateUserResult == 0)
+      if (updateUserResult.modifiedCount == 0)
         throw { status: 500, message: "درخواست ثبت  نشد" };
       return res.send({
         status: 200,

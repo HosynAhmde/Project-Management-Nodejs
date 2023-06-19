@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const inviteRequest = new mongoose.Schema({
   teamID: { type: mongoose.Types.ObjectId, required: true },
-  caller: { type: String, required: true, lowercase: true },
+  caller: { type: String, required: true },
   requestDate: { type: Date, default: Date.now() },
   status: { type: String, defualt: "pending" },
 });

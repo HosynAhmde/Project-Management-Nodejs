@@ -18,7 +18,8 @@ router.get("/me", chekLogin, TeamController.getMyTeams);
 router.get(
   "/invite/:teamID/:username",
   chekLogin,
-
+  idValidation(),
+  expressValidatorErrors,
   TeamController.inviteUserToTeam
 );
 router.get(
